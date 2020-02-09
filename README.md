@@ -1,6 +1,8 @@
-# [WIP] td
+# td
 
 Super Simple TODO management tool
+
+![demo](https://github.com/nasjp/td/blob/master/td.gif)
 
 ## Usage
 
@@ -23,37 +25,6 @@ COMMANDS:
 
 ```sh
 go get github.com/nasjp/td
-```
-
-## Example
-
-```sh
-$ td new
-.td.json was generated
-
-$ td add
-task's detail:  This is a task
-priority [H/L]:
-
-$ td list
-  1 [ ] This is a task
-
-$ td add
-task's detail:  This is a high priority task
-priority [H/L]: H
-
-$ td list
-  1 [ ] This is a task
-H 2 [ ] This is a high priority task
-
-$ td done 2
-
-$ td list
-  1 [ ] This is a task
-
-$ td list -a
-  1 [ ] This is a task
-H 2 [x] This is a high priority task
 ```
 
 ## TODO
