@@ -23,7 +23,7 @@ func main() {
 
 func run() error {
 	if len(os.Args) <= 1 {
-		return fmt.Errorf("to see help text")
+		return fmt.Errorf("please see help text")
 	}
 
 	switch os.Args[1] {
