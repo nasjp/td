@@ -14,8 +14,7 @@ const filename = ".td.json"
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Println("")
+		fmt.Fprintln(os.Stderr, fmt.Errorf("Error: %w\n", err))
 		cmdHelp()
 		os.Exit(1)
 	}
@@ -24,11 +23,11 @@ func main() {
 
 func run() error {
 	if len(os.Args) <= 1 {
-		return fmt.Errorf("please set an arg")
+		return fmt.Errorf("to see help text")
 	}
 
 	switch os.Args[1] {
-	case "help":
+	case "help", "h", "":
 		cmdHelp()
 		return nil
 	case "new", "n":
@@ -51,7 +50,6 @@ func run() error {
 			return err
 		}
 		return nil
-
 	case "open", "o":
 		if err := cmdOpen(); err != nil {
 			return err
@@ -59,22 +57,23 @@ func run() error {
 		return nil
 	}
 
-	return fmt.Errorf("please set a correct arg")
+	return fmt.Errorf("'%s' is not a td command", os.Args[1])
 }
 
 func cmdHelp() {
-	txt := `NAME:
+	txt := `Name:
    td - super simple TODO management tool
 
-USAGE:
-   td command [command options] [arguments...]
+Usage:
+   td command [options] [arguments]
 
-COMMANDS:
-     new,  n    create todo
+Commands:
+     help, h    show help
+     new,  n    create config file in current dir
      list, l    list todo
-     add,  a    add new todo
-     done, d    make todo status done
-     open, o    make todo status open`
+     add,  a    add a new task
+     done, d    make a task status done
+     open, o    make a task status open`
 
 	fmt.Println(txt)
 }
@@ -254,7 +253,6 @@ func scanTask(r io.Reader) task {
 	for {
 		fmt.Print("priority [H/L]: ")
 		if sc.Scan() {
-
 			p, err := getTaskPriorityByStr(sc.Text())
 			if err != nil {
 				fmt.Println("please enter correct priority (H or M or L)")
@@ -269,8 +267,7 @@ func scanTask(r io.Reader) task {
 }
 
 func (t task) line() string {
-	txt := fmt.Sprintf("%s %d [%s] %s", t.Priority, t.ID, t.Status, t.Body)
-	return txt
+	return fmt.Sprintf("%s %d [%s] %s", t.Priority, t.ID, t.Status, t.Body)
 }
 
 type taskStatus int
@@ -326,7 +323,6 @@ func newTodo(r io.Reader) (todo, error) {
 	if err := json.NewDecoder(r).Decode(&td); err != nil {
 		return nil, fmt.Errorf("can't parse to todo file")
 	}
-
 	return td, nil
 }
 
@@ -337,7 +333,6 @@ func (td todo) LastID() int {
 			maxID = t.ID
 		}
 	}
-
 	return maxID
 }
 
@@ -348,6 +343,5 @@ func (td todo) changeStatusByID(id int, status taskStatus) (todo, error) {
 			return td, nil
 		}
 	}
-
 	return nil, fmt.Errorf("task is not found, id: %d", id)
 }
